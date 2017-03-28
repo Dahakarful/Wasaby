@@ -1,0 +1,97 @@
+<script type="text/javascript">
+    var map
+    var markers = []
+
+    // after the geojson is loaded, iterate through the map data to create markers
+    // and add the pop up (info) windows
+    function loadMarkers() {
+        console.log('creating markers')
+        var infoWindow = new google.maps.InfoWindow()
+        map.data.forEach(function(feature) {
+
+            // geojson format is [longitude, latitude] but google maps marker position attribute
+            // expects [latitude, longitude]
+            var latitude = feature.getGeometry().get().lat()
+            var longitude = feature.getGeometry().get().lng()
+            var titleText = feature.getProperty('title')
+            var descriptionText = feature.getProperty('description')
+
+            var marker = new google.maps.Marker({
+                position: {
+                    lat: latitude,
+                    lng: longitude
+                },
+                title: titleText,
+                map: map
+            });
+
+            var markerInfo = "<div><h3>" + titleText + "</h3>Amenities: " + descriptionText + "</div>"
+
+            // by default the infoWindow for each marker will stay open unless manually closed
+            // using setContent and opening the window whenever a marker is clicked will
+            // cause the prior infoWindow to close
+
+            marker.addListener('click', function() {
+                infoWindow.close()
+                infoWindow.setContent(markerInfo)
+                infoWindow.open(map, marker)
+            });
+            markers.push(marker)
+        });
+    }
+
+    function initMap() {
+        map_options = {
+            zoom: 2,
+            mapTypeId: google.maps.MapTypeId.HYBRID,
+            center: {
+                lat: 48.4000,
+                lng: -4.4833
+            }
+        }
+
+        map_document = document.getElementById('map')
+        map = new google.maps.Map(map_document, map_options);
+        geojson_url = ''
+
+        console.log('loading geojson')
+        map.data.loadGeoJson(geojson_url, null, loadMarkers)
+
+    }
+
+    //google.maps.event.addDomListener(window, 'load', initMap);
+</script>
+
+<!DOCTYPE html>
+<html lang="fr" ng-app="App">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+
+<body id="container">
+    <div id="topbar">
+        <h1>Wasaby</h1>
+    </div>
+    <form id="search">
+        <input style="float:left" class="form-control" type="text" placeholder="Recherche..." name="search" id="searchbar">
+    </form>
+    <div id="home">
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN0ifO2i8rQflb3q6wBJJsAvOg2YN4l1E&callback=initMap" type="text/javascript"></script>
+        <div id="map"></div>
+    </div>
+    <div id="data">
+        <div id="data-buoyes">
+            <p>Bouée</p>
+        </div>
+        <div id="data-sat">
+            <p>Sat</p>
+        </div>
+    </div>
+</body>
+
+</html>
