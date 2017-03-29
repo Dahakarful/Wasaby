@@ -37,7 +37,7 @@
 #data-buoyes {
     float: left;
     width: 49%;
-    background-color: grey;
+    background-color: #F1F1F1;
     padding: 20px;
     text-align: center;
     min-height: 300px;
@@ -46,7 +46,7 @@
 #data-sat {
     float: right;
     width: 49%;
-    background-color: grey;
+    background-color: #F1F1F1;
     padding: 20px;
     text-align: center;
     min-height: 300px;
