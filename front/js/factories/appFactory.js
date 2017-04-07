@@ -8,6 +8,8 @@ wasaby.factory('appFactory', function ($http) {
                 method: 'GET',
                 url: buoysJson,
                 headers: {'Content-Type': 'application/json'}
+            }).then(function(response){
+                return response.data;
             });
         },
     }
